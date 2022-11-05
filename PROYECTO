@@ -1,0 +1,248 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "3baefa2e-d80b-4cf0-9f39-40aaee6d66b5",
+   "metadata": {},
+   "source": [
+    "# <span style = \"color:red\"> Modelo multinivel para plantas de cacao en Norte de Santander</span>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "44f86ca5-df0b-40e4-919b-d3cd61fb1103",
+   "metadata": {},
+   "source": [
+    "<h2 style = \"color:green\"> Propuesta del proyecto </h2>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3d18972c-e781-43d2-8a9e-d30f0b03693e",
+   "metadata": {},
+   "source": [
+    "Desarrollar un modelo multinivel para la predicción del comportamiento de varias variables en plantas de Cacao en Pamplona, Norte de Santander usando Rstudio versión 4.2.0."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0ea1b476-57f5-415f-93f4-2dbc8415df7d",
+   "metadata": {},
+   "source": [
+    "**Asesor principal**: "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dde87ef5-b28f-47d5-8c7b-43cda3fea186",
+   "metadata": {},
+   "source": [
+    "### <span style = \"color:green\"> Autor: </span>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9d0d9796-0ab9-46f4-b93f-99bb209e2e8c",
+   "metadata": {},
+   "source": [
+    "**Mateo Felipe Fandiño Suarez**, estudiante de Ingeniería Agronómica Sede Bogotá"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0b74d6d6-bb00-4622-a5c2-6e599371df26",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Introducción </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4417d705-bbb0-407b-85bf-c7c9acac9c0d",
+   "metadata": {},
+   "source": [
+    "El Cacao (*Theobroma cacao*) es una planta originaria de la cuenca del Amazonas, es un árbol que requiere alta demanda de humedad y calor. Es de hoja perenne y siempre se encuentra en floración, crece entre los 5 y 10 m de altura. Requiere de sombra, protección del viento, y un suelo rico de nutrientes e importante densidad de poros. Su altura ideal para establecimiento es de 400 msnm. Se recomienda mantener suelo con suficiencias en nitrógeno, magnesio y potasio. Temperatura óptima de 20 a 30 °C. El **fruto** es una baya grande conocida como \"*mazorca*\", carnosa, con forma oblonga u ovalada, de color amarillo o púrpura, de longitud de 15 a 30 cm de largo por 7 a 10 cm grueso, puntiaguda y con canales longitudinales, cada semilla contiene en general entre 30 y 40 semillas incrustadas en una masa de pulpa dearrollada de las capas externas de la testa.\n",
+    "<a href = \"https://es.wikipedia.org/wiki/Theobroma_cacao\">Wikipedia</a>\n",
+    "De las variedades cultivadas, en este informe se trabajará con 3: **Forastero**, **Criollo** y **Trinitario**. El Forastero Presenta mayor variedad de frutos aunque produce el grano menos aromático comparado con las demás. Tiene un sabor fuerte y amargo, ligeramnete ácido. Con mucho tanino y asttingencia (Desecación, contracción de tejidos). Tiene gran potencia aronática, pero sin finura ni diversidad de sabores. Su producción alcanza el 70% del total mundial. El *Criollo* es de mayor calidad, producción menos de 10% mundial. Es un cacao de aromas afrutados, de intensidades medias, con notas de frutos secos y ligeramente amargo, pero refinado; en general son chocolates de mayor calidad. Por último, el *Trinitario* es un híbrido entre el criollo y el Forastero, combina características gustativas y olfativas de ambos, posee un amplio rango de sabores, aromáticos y persistentes, con sabores a heno, roble miel, manzana y melón. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "29730313-e922-4d3c-89f4-266276a46eca",
+   "metadata": {},
+   "source": [
+    "<figure>\n",
+    "<center>\n",
+    "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cacao_en_Honduras.jpg/1024px-Cacao_en_Honduras.jpg\"  width=\"300\" height=\"517\" align=\"center\"> \n",
+    "</center>   \n",
+    "</figure>\n",
+    "<center>Fuente: <a href=&quot;//commons.wikimedia.org/wiki/User:Luis_Alfredo_Romero&quot; title=&quot;User:Luis Alfredo Romero&quot;&gt;Luis Alfredo Romero&lt;/a&gt; - &lt;span class=&quot;int-own-work&quot; lang=&quot;es&quot;&gt;Trabajo propio&lt;/span&gt;, <a href=\"https://creativecommons.org/licenses/by-sa/4.0\" title=\"Creative Commons Attribution-Share Alike 4.0\">CC BY-SA 4.0</a> <a href=\"https://commons.wikimedia.org/w/index.php?curid=122665206\"></a> <center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "33d3a1c7-ac82-4c71-969b-8efb65a0cfea",
+   "metadata": {},
+   "source": [
+    "**Modelos multinivel** Son modelos aplicados para ver la varianza entre subgrupos, entre grupos e intragrupos. Tambien analizar la correlación entre ellas, diferentes covariables pueden ser relevantes en diferentes niveles. Pueden ser utilizados para modelar el cambio sobre el tiempo en una variable de interés. Uso de modelos no lineales con parámetros variables para encontrar asíntotas que pueden ayudar a definir el rango límite de los posibles valores. Pueden incorporar tiempo constante o covariables variando en el tiempo como predictores.  \n",
+    "Los individuos pertenecientes a un mismo grupo tienden a ser mas similares en su comportamiento que a los de otros grupos. Estructura de correlación intracontextual. Impide la hipótesis de independencia. ***Falacia del error del nivel***: analizar los datos en un nivel, y extraer conclusiones de otro nivel. La más conocida: ***Falacia ecológica*** : pretende deducir relaciones para los individuos o nivel 1, cuando los resultados contextuales o nivel 2, no reproducen necesariamente a nivel individual. ***Falacia atomista***: las mismas asociaciones a nivel individual (nivel 1) como relaciones a nivel contextual (Nivel 2).\\\n",
+    "En los modelos multinivel como unidades (agrupamientos) que definen los niveles, son vistos como efectos aleatorios, de esta forma, como muestras aleatorias de una población de estas unidades."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "11fc8013-406b-4124-8719-5eb3b9396048",
+   "metadata": {},
+   "source": [
+    "## <center> <span style=\"color:green\"> Descripción del problema </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "56759329-3ca4-408a-9a4c-083eda8cc682",
+   "metadata": {},
+   "source": [
+    "Desarrollar un infome donde se describa correctamente cual de las 3 variedades de Cacao presenta mejores características y genera mayor rendimiento para la toma de decisiones por parte de los ingenieros responsables del cultivo, haciendo uso de herramientas estadísticas y computacionales."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "82530727-dc06-416f-b981-62e13a446964",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Fuente de datos </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8d1b27e5-a3b8-4138-81cb-56383559027e",
+   "metadata": {},
+   "source": [
+    "Los datos fueron proporcionados en un documento *.xslx*(**Excel**) por un profesor evaluador y colaborador de la Universidad de Pamplona, Norte de Santander con el compromiso de no ser divulgados antes de su publicación. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7c6ed8ec-6cf7-48c3-96cf-e3f19fb7d600",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Procesamiento ETL </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1476906f-d737-4d05-a810-c68459e4c779",
+   "metadata": {},
+   "source": [
+    "Rstudio cuenta con facilidad para importación de datos, de esta forma con la librería (readxl) se puede subir el documento *.xlsx* y asignarlo a un nómbre de una variable con la classe *data frame"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "650e5d61-60df-4f53-9974-398aca09c8b3",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Exploración de datos </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "70b9cdbd-12d4-4e2e-af1f-6456cf6409a1",
+   "metadata": {},
+   "source": [
+    "Previamente a la parte descriptiva de los datos se buscarán anomalías en la base de datos, como datos faltantes, nulos o de tipos no reconocibles para el procesamiento. Después de eso, se hará un arbol collapsable para entender el contexto del estudio, boxplot para cada varible para observación de outliers, gráfico de pares de correlaciones, y para cada varible una descripción con boxplot, jitter plot, violin plot y plot de densidad a nivel de: Variedad, Árbol y hoja, de manera independiente. Finalmente, para la parte descriptiva un plot sencillo entre las variables que presenten un tipo de **correlación de spearman** importante después del gráfico de correlaciones"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "335153e6-4362-444e-bd93-d8b1d1db67ba",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Técnicas de Modelación propuestas </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7398f639-b1a4-4000-a66b-b7f577ed5d93",
+   "metadata": {},
+   "source": [
+    "Modelación con la función **glm** para modelos multinivel"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4cc74098-716b-4077-9b4a-724ec04a5d25",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Conocimientos requeridos </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "57739a6e-ce38-486e-b827-4d732d161ee2",
+   "metadata": {},
+   "source": [
+    "* Rstudio:nivel intermedio\n",
+    "* Análisis de componentes principales\n",
+    "* Clustering\n",
+    "* Modelos de medidas repetidas\n",
+    "* Análisis multivariante (*MANOVA*)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "49c00ea8-3156-4065-8fa5-28cb864be784",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Resultados esperados </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "512ddb02-3485-41f1-8e6c-926228136274",
+   "metadata": {},
+   "source": [
+    "* Descripción del comportamiento de las variedades de cacao con múltiples variables\n",
+    "* Reducción de dimensionalidad para optimización de procesos \n",
+    "* Propuesta de modelo para predicción de comportamiento"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "88f5eceb-624c-4611-be9f-4e816c176f0f",
+   "metadata": {},
+   "source": [
+    "## <center> <span style = \"color:green\"> Tiempo de desarrollo esperado </span> </center>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "72a7c7ee-044b-4a95-943f-d121e6ea7c0e",
+   "metadata": {},
+   "source": [
+    "3 Semanas"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
